@@ -38,17 +38,15 @@
   <script>
       const mydata = 
         []
-    //   list;
-    //     oldlist;
-    //     result =[];
-    //     content
-       today = new Date().toJSON().split('T')[0];
-    //     startdate;
-    //     enddate;
-    function CreateTableFromJSON() {   
+    const nsdata=["articleName","docID","domContent","errorID"];
+      var today = new Date().toJSON().split('T')[0];
+
+       
+    function CreateJSON(mydata) {  
+       console.log(nsdata);
         var col = [];
-            for (var i = 0; i < mydata.length; i++) {
-                for (var key in mydata[i]) {
+            for (var i = 0; i < nsdata.length; i++) {
+                for (var key of nsdata) {
                     if (col.indexOf(key) === -1) {
                         col.push(key);
                     }
@@ -69,16 +67,15 @@
             }
 
             // ADD JSON DATA TO THE TABLE AS ROWS.
-            for (var i = 0; i < mydata.length; i++) {
-
-                tr = table.insertRow(-1);
-
-                for (var j = 0; j < col.length; j++) {
-                    var tabCell = tr.insertCell(-1);
-                    tabCell.innerHTML = mydata[i][col[j]];
-                }
+            for(var i=0; i<mydata.length;i++)
+            {
+              tr = table.insertRow(-1);
+              
+              for (var j = 0; j < nsdata.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = mydata[i][nsdata[j]];
+              }
             }
-
             // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
             var divContainer = document.getElementById("showData");
             divContainer.innerHTML = "";
@@ -90,59 +87,36 @@
     function myFunction() {
         var startdate = document.getElementById("startdate").value;
         var enddate = document.getElementById("enddate").value;
-        if(this.startdate <= this.enddate){
-        var std= this.startdate;
-        std = std.split('-').reverse().join('-');
-        var nwd = this.enddate;
-        nwd = nwd.split('-').reverse().join('-');
-        // document.getElementById("old").style.display = 'none';
-        // document.getElementById("nue").style.display = 'block';
-        
-        this.list = this.mydata.filter(m => m.entryDate >= std && m.entryDate <= nwd);
-        this.result = this.list;
-        console.log(this.result);}else alert("enter the dates correctly");
+        console.log(startdate,enddate);
+        if(startdate <= enddate){
+        var std= startdate.split('-').reverse().join('-');
+        var nwd = enddate.split('-').reverse().join('-');
+        var list = [];
+        list = mydata.filter(m => m.entryDate >= std && m.entryDate <= nwd);
+         console.log(list);
+         CreateJSON(list); 
+        }
+        else alert("enter the dates correctly");
     }
-
   </script>
 </head>
-<body>
-<h1><u>List of the Data</u></h1>
-<table align="center">
-  <tr>
-    <td>Start date - </td>
-    <td><input  class="form-control" type="date" max= id="startdate"></td>
-  </tr><br>
-  <tr>
-    <td>End date - </td>
-    <td><input  class="form-control" type="date" [max]="today" id="enddate"></td>
-  </tr>
-  <tr>
-    <td colspan="2">
-      <button (click)="myFunction();" class="btn btn-default">Filter
-      </button>
-    </td>
-  </tr>
-</table>
-<br><br>
-<button onclick="CreateTableFromJSON()" >view JSON</button>
+  <body onload="CreateJSON(mydata)">
+    <h1><u>List of the Data</u></h1>
+    <table align="center">
+      <tr>
+        <td>Start date - </td>
+        <td><input  class="form-control" type="date" [max]="Date(today)" id="startdate"></td>
+      </tr><br>
+      <tr>
+        <td>End date - </td>
+        <td><input  class="form-control" type="date" [max]="Date(today)" id="enddate"></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button onclick="myFunction();">Filter</button>
+        </td>
+      </tr>
+    </table><br><br>
     <p id="showData"></p>
- <!-- <div id="old">
-  <table class="table table-striped data">
-    <tr>
-      <th>ARTICLE NAME</th>
-      <th>DOC ID</th>
-      <th>DOC CONTENT</th>
-      <th>ENGINE TYPE</th>
-      <th>ERROR ID</th>
-    </tr>
-    <tr *ngFor="let d of mydata" >
-      <td></td>
-      <td>{{d.docID}}</td>
-      <td>{{d.domContent}}</td>
-      <td>{{d.errorJSON.engineType}}</td>
-      <td>{{d.errorID}}</td>
-    </tr>
-  </table>
-  </div> -->
   </body>
-  </html>
+</html>
